@@ -28,7 +28,7 @@ public class UserController {
     }
 
     // Lấy thông tin user hiện tại từ token
-    @GetMapping("/me")
+    @GetMapping("/getprofile")
     public ResponseEntity<?> getMyProfile(@RequestHeader(value = "Authorization") String authHeader) {
         String token = authHeader != null && authHeader.startsWith("Bearer ") ? authHeader.substring(7) : authHeader;
         String email = jwtUtil.extractEmail(token);
@@ -36,7 +36,7 @@ public class UserController {
     }
 
     // Cập nhật hồ sơ user hiện tại
-    @PutMapping("/me")
+    @PutMapping("/updateprofile")
     public ResponseEntity<?> updateMyProfile(@RequestHeader(value = "Authorization") String authHeader,
                                              @RequestBody UpdateProfileRequest request) {
         String token = authHeader != null && authHeader.startsWith("Bearer ") ? authHeader.substring(7) : authHeader;
