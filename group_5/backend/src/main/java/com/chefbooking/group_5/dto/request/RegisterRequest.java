@@ -1,15 +1,23 @@
-package com.chefbooking.group_5.dto;
+package com.chefbooking.group_5.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class RegisterRequest {
     @Email(message = "Email không hợp lệ")
     @NotBlank(message = "Email không được để trống")
     private String email;
 
     @NotBlank(message = "Mật khẩu không được để trống")
+    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự")
     private String password;
+
+    @NotBlank(message = "Họ tên không được để trống")
+    private String fullName;
+
+    private String phoneNumber;
+    private String address;
 }

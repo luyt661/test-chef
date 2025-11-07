@@ -1,4 +1,4 @@
-package com.chefbooking.group_5.dto;
+package com.chefbooking.group_5.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
