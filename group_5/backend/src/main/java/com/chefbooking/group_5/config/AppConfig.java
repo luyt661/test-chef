@@ -2,6 +2,7 @@ package com.chefbooking.group_5.config;
 
 import com.chefbooking.group_5.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-public class AppConfig {  // ← XÓA @RequiredArgsConstructor
+public class AppConfig {
 
     private static final String[] WHITE_LIST = {
             "/api/auth/**",
@@ -31,6 +32,7 @@ public class AppConfig {  // ← XÓA @RequiredArgsConstructor
         return new BCryptPasswordEncoder();
     }
 
+    // Truyền UserService qua tham số — KHÔNG dùng field @Autowired
     @Bean
     public AuthenticationProvider authenticationProvider(UserService userService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -45,7 +47,9 @@ public class AppConfig {  // ← XÓA @RequiredArgsConstructor
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, PreFilter preFilter, UserService userService) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           PreFilter preFilter,
+                                           AuthenticationProvider authProvider) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -55,7 +59,7 @@ public class AppConfig {  // ← XÓA @RequiredArgsConstructor
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .authenticationProvider(authenticationProvider(userService))
+                .authenticationProvider(authProvider)
                 .addFilterBefore(preFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -1,9 +1,12 @@
 package com.chefbooking.group_5.service.impl;
 
 import com.chefbooking.group_5.dto.request.RegisterRequest;
+import com.chefbooking.group_5.dto.request.UserUpdateRequest;
+import com.chefbooking.group_5.dto.response.UserDetailResponse;
 import com.chefbooking.group_5.entity.User;
 import com.chefbooking.group_5.repository.UserRepository;
 import com.chefbooking.group_5.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,6 +39,40 @@ public class UserServiceImpl implements UserService {
                             .toList()
             );
         };
+    }
+    @Override
+    public User findByUsername(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("Không tìm thấy người dùng: " + email);
+        }
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public UserDetailResponse updateProfileByUsername(String email, UserUpdateRequest request) {
+        // 1. Tìm user theo email
+        User user = findByUsername(email);
+
+        // 2. Cập nhật thông tin nếu có
+        if (request.getFullname() != null) user.setFullName(request.getFullname());
+        if (request.getPhone() != null) user.setPhoneNumber(request.getPhone());
+        if (request.getDateOfBirth() != null) user.setDateOfBirth(request.getDateOfBirth());
+        if (request.getAddress() != null) user.setAddress(request.getAddress());
+
+        // 3. Lưu user
+        userRepository.save(user);
+
+        // 4. Build UserDetailResponse để trả về
+        return UserDetailResponse.builder()
+                .id(user.getUserId().longValue())
+                .fullname(user.getFullName())
+                .email(user.getEmail())
+                .phone(user.getPhoneNumber())
+                .profileUrl(user.getProfileImageUrl())
+                .dateOfBirth(user.getDateOfBirth())
+                .build();
     }
 
 

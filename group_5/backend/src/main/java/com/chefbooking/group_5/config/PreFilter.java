@@ -57,11 +57,11 @@ public class PreFilter extends OncePerRequestFilter {
         // 4. Kiểm tra: email có & chưa auth
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+            // Trong PreFilter.java – phần try-catch
             try {
                 UserDetails userDetails = userService.getUserDetailsService().loadUserByUsername(email);
                 log.debug("Loaded UserDetails for: {}", email);
 
-                // 5. Validate token
                 if (jwtService.validate(token, userDetails)) {
                     log.info("Token valid. Authenticating user: {}", email);
 
@@ -73,15 +73,13 @@ public class PreFilter extends OncePerRequestFilter {
                             );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-
                 } else {
                     log.warn("Token validation failed for user: {}", email);
                     sendUnauthorized(response, "Invalid or expired token");
                     return;
                 }
-
             } catch (Exception e) {
-                log.error("Error loading user or validating token: {}", e.getMessage());
+                log.error("Error loading user or validating token: {}", e.getMessage(), e);
                 sendUnauthorized(response, "Authentication failed");
                 return;
             }
