@@ -1,5 +1,6 @@
 package com.chefbooking.group_5.service.impl;
 
+import com.chefbooking.group_5.dto.request.ChangePasswordRequest;
 import com.chefbooking.group_5.dto.request.RegisterRequest;
 import com.chefbooking.group_5.dto.request.UserUpdateRequest;
 import com.chefbooking.group_5.dto.response.UserDetailResponse;
@@ -9,6 +10,8 @@ import com.chefbooking.group_5.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -75,6 +78,30 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    public void changePassword(ChangePasswordRequest request) {
+        // 1. Lấy thông tin user đang đăng nhập
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername(); // Đây chính là email
 
+        // 2. Tìm user bằng phương thức BẠN ĐÃ VIẾT SẴN (findByUsername)
+        // Phương thức này đã tự xử lý "orElseThrow" rồi
+        User user = findByUsername(email);
 
+        // 3. Kiểm tra mật khẩu cũ
+        // Dùng getPasswordHash() để khớp với entity User của bạn
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPasswordHash())) {
+            throw new RuntimeException("Incorrect old password");
+        }
+
+        // 4. Kiểm tra mật khẩu mới và xác nhận
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("New password and confirm password do not match");
+        }
+
+        // 5. Cập nhật và lưu mật khẩu mới
+        // Dùng setPasswordHash() để khớp với entity User của bạn
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
 }

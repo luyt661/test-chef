@@ -1,5 +1,6 @@
 package com.chefbooking.group_5.controller;
 
+import com.chefbooking.group_5.dto.request.ChangePasswordRequest;
 import com.chefbooking.group_5.dto.request.UserUpdateRequest;
 import com.chefbooking.group_5.dto.response.ResponseData;
 import com.chefbooking.group_5.dto.response.UserDetailResponse;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -69,6 +71,19 @@ public class UserController {
         UserDetailResponse updatedDto = userService.updateProfileByUsername(username, updateRequest);
 
         return new ResponseData<>(HttpStatus.OK.value(), "Cập nhật hồ sơ thành công", updatedDto);
+    }
+
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        try {
+            userService.changePassword(request);
+            // Có thể trả về DTO Response nếu muốn
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (RuntimeException e) {
+            // Nên có một GlobalExceptionHandler để xử lý
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

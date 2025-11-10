@@ -18,6 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.core.context.SecurityContextHolder;
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 public class AppConfig {
 
@@ -61,6 +65,23 @@ public class AppConfig {
                 )
                 .authenticationProvider(authProvider)
                 .addFilterBefore(preFilter, UsernamePasswordAuthenticationFilter.class)
+
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/logout")
+
+                        // Dùng .logoutSuccessHandler() để trả về JSON
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            // Xóa context
+                            SecurityContextHolder.clearContext();
+
+                            // Giờ thì .getWriter() là an toàn!
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"message\": \"Logout successful\"}");
+                            response.getWriter().flush();
+                        })
+                )
+
                 .build();
     }
 }
