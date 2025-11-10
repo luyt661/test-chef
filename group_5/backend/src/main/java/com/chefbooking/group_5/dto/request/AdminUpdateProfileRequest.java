@@ -21,5 +21,5 @@ public class AdminUpdateProfileRequest {
     private LocalDate dateOfBirth;
     @NotBlank(message = "Address không được để trống")
     private String address;
-    private Integer  roleIds;
+    private Integer roleIds;
 }
