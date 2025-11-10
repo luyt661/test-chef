@@ -1,6 +1,7 @@
 package com.chefbooking.group_5.service;
 
 import com.chefbooking.group_5.dto.request.AdminUpdateProfileRequest;
+import com.chefbooking.group_5.dto.response.UserOverviewResponse;
 import com.chefbooking.group_5.dto.response.UserPageResponse;
 import com.chefbooking.group_5.dto.response.UserWithRolesResponse;
 
@@ -12,7 +13,7 @@ public interface ManageUserService {
     public UserPageResponse  getActiveUser(int page, int size);
     public UserPageResponse  getActiveAdmin(int page, int size);
     public UserPageResponse getInactiveUsersWithRoles(int page, int size);
-    UserWithRolesResponse updateProfileByAdmin(Integer userId, AdminUpdateProfileRequest request);
+    public UserWithRolesResponse updateProfileByAdmin(Integer userId, AdminUpdateProfileRequest request);
     public UserWithRolesResponse getUserDetail(Integer userID);
-
+    public UserOverviewResponse getUserOverView();
 }

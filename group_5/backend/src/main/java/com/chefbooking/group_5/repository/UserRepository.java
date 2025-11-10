@@ -41,11 +41,54 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Transactional
     @Query(value = """
-    UPDATE user_role
-    SET role_id = :roleId
-    WHERE user_id = :userId
-    """, nativeQuery = true)
+            UPDATE user_role
+            SET role_id = :roleId
+            WHERE user_id = :userId
+            """, nativeQuery = true)
     void updateRoleByUserId(@Param("userId") Integer userId, @Param("roleId") Integer roleId);
+
+    @Query(
+            value = """
+                    SELECT COUNT(u.user_id)
+                    FROM Users u
+                    """,
+            nativeQuery = true
+    )
+    Long countAllAccounts();
+
+    @Query(
+            value = """
+                    SELECT COUNT(u.user_id)
+                    FROM Users u
+                    WHERE u.is_active = :active
+                    """,
+            nativeQuery = true
+    )
+    Long countAccountsByStatus(@Param("active") int active);
+
+    @Query(
+            value = """
+                    SELECT COUNT(u.user_id)
+                    FROM role r
+                    JOIN user_role ur ON r.role_id = ur.role_id
+                    JOIN Users u ON ur.user_id = u.user_id
+                    WHERE r.role_id = :roleId AND u.created_at >= DATEADD(DAY, - :day, GETDATE())
+                    """,
+            nativeQuery = true
+    )
+    Long countNewAccountsByRoleInLastDays(@Param("roleId") int roleId, @Param("day") int day);
+
+    @Query(
+            value = """
+                SELECT COUNT(u.user_id)
+                FROM user_role ur
+                JOIN Users u ON ur.user_id = u.user_id
+                WHERE ur.role_id = :roleId
+                  AND u.is_active = :active
+                """,
+            nativeQuery = true
+    )
+    Long countAccountsByRole(@Param("roleId") int roleId, @Param("active") int active);
 
 }
 

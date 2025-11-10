@@ -1,6 +1,7 @@
 package com.chefbooking.group_5.controller;
 
 import com.chefbooking.group_5.dto.request.AdminUpdateProfileRequest;
+import com.chefbooking.group_5.dto.response.UserOverviewResponse;
 import com.chefbooking.group_5.dto.response.UserPageResponse;
 import com.chefbooking.group_5.dto.response.UserWithRolesResponse;
 import com.chefbooking.group_5.service.ManageUserService;
@@ -67,4 +68,9 @@ public class ManageUserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/overview")
+    public ResponseEntity<UserOverviewResponse> getOverView() {
+        UserOverviewResponse response = manageUserService.getUserOverView();
+        return ResponseEntity.ok(response);
+    }
 }

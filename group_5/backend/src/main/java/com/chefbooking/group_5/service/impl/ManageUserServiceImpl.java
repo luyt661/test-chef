@@ -1,6 +1,7 @@
 package com.chefbooking.group_5.service.impl;
 
 import com.chefbooking.group_5.dto.request.AdminUpdateProfileRequest;
+import com.chefbooking.group_5.dto.response.UserOverviewResponse;
 import com.chefbooking.group_5.dto.response.UserPageResponse;
 import com.chefbooking.group_5.dto.response.UserWithRolesResponse;
 import com.chefbooking.group_5.entity.User;
@@ -11,7 +12,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManageUserServiceImpl implements ManageUserService {
 
-    private final  UserRepository userRepository;
+    private final UserRepository userRepository;
+
     @Override
     public UserPageResponse getActiveUsersWithRoles(int page, int size) {
         return getPagedUsers(true, null, page, size);
@@ -101,7 +102,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         return response;
     }
 
-    private UserWithRolesResponse getUserWithRolesResponse(User user,Integer roleIds,String roleNames) {
+    private UserWithRolesResponse getUserWithRolesResponse(User user, Integer roleIds, String roleNames) {
         UserWithRolesResponse u = new UserWithRolesResponse();
         u.setUserId(user.getUserId());
         u.setFullName(user.getFullName());
@@ -133,7 +134,7 @@ public class ManageUserServiceImpl implements ManageUserService {
                     roleName = ur.getRole().getRoleName();
                 }
             }
-            return getUserWithRolesResponse(user,roleId,roleName);
+            return getUserWithRolesResponse(user, roleId, roleName);
         }
         return null;
     }
@@ -181,6 +182,28 @@ public class ManageUserServiceImpl implements ManageUserService {
                 roleName = ur.getRole().getRoleName();
             }
         }
-        return getUserWithRolesResponse(newUser,roleId,roleName);
+        return getUserWithRolesResponse(newUser, roleId, roleName);
+    }
+
+
+    @Override
+    public UserOverviewResponse getUserOverView() {
+        UserOverviewResponse userOverviewResponse = new UserOverviewResponse();
+        userOverviewResponse.setTotalAccounts(userRepository.countAllAccounts());
+        userOverviewResponse.setActiveAccounts(userRepository.countAccountsByStatus(1));
+        userOverviewResponse.setInactiveAccounts(userRepository.countAccountsByStatus(0));
+        userOverviewResponse.setNewUsersLast7Days(userRepository.countNewAccountsByRoleInLastDays(4, 7));
+        userOverviewResponse.setNewUsersLast30Days(userRepository.countNewAccountsByRoleInLastDays(4, 30));
+        userOverviewResponse.setNewChefsLast7Days(userRepository.countNewAccountsByRoleInLastDays(2, 7));
+        userOverviewResponse.setNewChefsLast30Days(userRepository.countNewAccountsByRoleInLastDays(2, 30));
+        userOverviewResponse.setUsersAccountActive(userRepository.countAccountsByRole(4,1));
+        userOverviewResponse.setUsersAccountInactive(userRepository.countAccountsByRole(4,0));
+        userOverviewResponse.setChefsAccountActive(userRepository.countAccountsByRole(2,1));
+        userOverviewResponse.setChefsAccountInactive(userRepository.countAccountsByRole(2,0));
+        userOverviewResponse.setAdminsAccountActive(userRepository.countAccountsByRole(1,1));
+        userOverviewResponse.setAdminsAccountInactive(userRepository.countAccountsByRole(1,0));
+        return userOverviewResponse;
     }
 }
+
+
