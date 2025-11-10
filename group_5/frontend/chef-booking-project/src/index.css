@@ -1,0 +1,244 @@
+/* src/index.css (Luxury Black & Gold - CORRECTED LAYOUT) */
+
+/* --- 1. IMPORT FONTS --- */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap');
+
+/* --- 2. CSS VARIABLES (Tu Style Guide) --- */
+:root {
+  --color-bg: #0B0B0B;
+  --color-gold-main: #C9A227;
+  --color-gold-light: #F2E2A2;
+  --color-gold-secondary: #B38B2E;
+  --color-text: #F8F5E9;
+  --color-text-dim: #BFBFBF;
+  --color-text-placeholder: #8C8C8C;
+  --color-glow: rgba(242, 226, 162, 0.3);
+  --color-shadow: rgba(204, 163, 54, 0.15);
+  --gradient-gold: linear-gradient(135deg, #C9A227, #F2E2A2);
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Lato', sans-serif;
+  --transition: all 0.3s ease;
+}
+
+/* --- 3. THEME CO BAN --- */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-gold-light);
+  letter-spacing: 0.03em;
+}
+
+/* ===================================
+   4. KHỐI 1: HEADER (Thanh rieng biet)
+====================================== */
+.navbar-luxury {
+  background-color: #000000 !important; /* Den tuyen, tach biet */
+  border-bottom: 1px solid var(--color-gold-secondary);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  padding: 10px 0;
+  /* Bootstrap "sticky-top" class se xu ly phan con lai */
+}
+
+/* Logo */
+.nav-logo img {
+  height: 75px; 
+  filter: drop-shadow(0 0 8px var(--color-glow));
+  transition: var(--transition);
+}
+.nav-logo img:hover {
+  filter: drop-shadow(0 0 12px rgba(242, 226, 162, 0.5));
+}
+
+/* Links (o giua) */
+.nav-link {
+  color: var(--color-text) !important;
+  font-weight: 600;
+  font-size: 16px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition);
+  margin: 0 10px;
+}
+.nav-link:hover {
+  color: var(--color-gold-light) !important;
+  border-bottom-color: var(--color-gold-light);
+}
+
+
+/* ===================================
+   5. CAC NUT HEADER
+====================================== */
+.nav-button {
+  padding: 12px 20px; 
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: var(--transition);
+  border: 2px solid transparent;
+}
+.nav-button-outline {
+  background-color: transparent;
+  color: var(--color-gold-secondary);
+  border-color: var(--color-gold-secondary);
+}
+.nav-button-outline:hover {
+  background-color: var(--color-gold-secondary);
+  color: var(--color-bg); 
+  box-shadow: 0 0 10px rgba(179, 139, 46, 0.4);
+}
+.nav-button-solid {
+  background: var(--gradient-gold);
+  color: var(--color-bg); 
+  border: none;
+}
+.nav-button-solid:hover {
+  box-shadow: 0 0 10px rgba(242, 226, 162, 0.4);
+  transform: translateY(-2px);
+}
+.user-icon-button {
+  border: 1px solid var(--color-gold-secondary);
+  border-radius: 50%;
+  color: var(--color-gold-secondary);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.user-icon-button:hover {
+  background-color: rgba(179, 139, 46, 0.1);
+  box-shadow: 0 0 10px rgba(179, 139, 46, 0.4);
+}
+
+/* ===================================
+   6. KHỐI 2: MAIN CONTENT
+====================================== */
+.main-content {
+  /* Day la noi bat dau noi dung */
+  /* Khong can padding-top vi Header la sticky */
+}
+
+/* Section 1: Hero (Nam trong Main) */
+.hero-section {
+  padding: 80px 0; /* Khoang tho cho Hero */
+  /* Hieu ung "sang sua" (glow) */
+  background-image: radial-gradient(
+    ellipse at center, 
+    rgba(181, 142, 48, 0.1) 0%, /* Anh sang vang nhe o giua */
+    transparent 70%
+  );
+}
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-dim);
+}
+
+/* Form tim kiem (Diem 5) */
+.search-form {
+  background-color: rgba(20, 20, 20, 0.5); /* #141414 voi do mo */
+  padding: 30px; 
+  border-radius: 10px;
+  border: 1px solid var(--color-gold-secondary);
+  box-shadow: 0 0 12px var(--color-shadow);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+.search-form input {
+  background-color: #141414; 
+  border: 1px solid var(--color-gold-secondary);
+  color: var(--color-text);
+  padding: 14px; 
+  font-size: 16px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+}
+.search-form input::placeholder {
+  color: var(--color-text-placeholder);
+}
+.search-form button {
+  background: var(--gradient-gold);
+  color: var(--color-bg);
+  border: none;
+  border-radius: 6px;
+  transition: var(--transition);
+  font-family: var(--font-body);
+  font-weight: 700;
+  padding: 14px 22px; 
+  font-size: 16px;
+  cursor: pointer;
+}
+.search-form button:hover {
+  box-shadow: 0 0 10px rgba(242, 226, 162, 0.4);
+  transform: translateY(-2px);
+}
+
+/* --- Cac section con lai --- */
+.main-content section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  border-bottom: 1px solid rgba(179, 139, 46, 0.3); /* Vien vang mo */
+}
+.main-content .hero-section {
+  border-bottom: 1px solid rgba(179, 139, 46, 0.3); /* Hero cung can border */
+}
+.main-content section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.step-icon {
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--color-gold);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--color-gold);
+  margin-bottom: 20px;
+}
+.how-it-works-section h3 {
+  color: var(--color-gold-light);
+}
+
+.placeholder-content {
+  background: var(--color-bg);
+  border: 1px solid rgba(204, 163, 54, 0.5); 
+  color: var(--color-text-dim);
+  padding: 80px 40px; 
+  text-align: center;
+  border-radius: 10px;
+  margin-top: 40px;
+  box-shadow: 0 0 12px var(--color-shadow);
+}
+
+/* ===================================
+   7. FOOTER
+====================================== */
+.footer-luxury {
+  background-color: #000000; 
+  border-top: 1px solid var(--color-gold-secondary);
+  color: var(--color-text-dim);
+  padding: 40px 20px;
+  margin-top: 40px;
+}
