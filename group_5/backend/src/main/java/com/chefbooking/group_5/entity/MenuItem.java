@@ -16,6 +16,7 @@ public class MenuItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "menu_item_id")
     private Integer menuItemId;
 
     @ManyToOne

@@ -1,11 +1,9 @@
 package com.chefbooking.group_5.service.impl;
 
-import com.chefbooking.group_5.dto.request.AdminUpdateProfileRequest;
 import com.chefbooking.group_5.dto.request.AdminUpdateStatusCVRequest;
 import com.chefbooking.group_5.dto.response.*;
 import com.chefbooking.group_5.entity.ChefProfile;
 import com.chefbooking.group_5.entity.User;
-import com.chefbooking.group_5.entity.UserRole;
 import com.chefbooking.group_5.repository.ManageChefRepository;
 import com.chefbooking.group_5.repository.UserRepository;
 import com.chefbooking.group_5.service.ManageChefService;
@@ -13,7 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
