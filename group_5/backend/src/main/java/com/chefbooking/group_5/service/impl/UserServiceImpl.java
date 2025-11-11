@@ -18,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import com.chefbooking.group_5.service.FileUploadService;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final FileUploadService fileUploadService;
 
     @Override
     public UserDetailsService getUserDetailsService() {
@@ -103,5 +108,32 @@ public class UserServiceImpl implements UserService {
         // Dùng setPasswordHash() để khớp với entity User của bạn
         user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional // quan trọng vì cập nhật CSDL
+    public UserDetailResponse updateProfileImage(String email, MultipartFile file) throws IOException {
+
+        // 1. Tải ảnh lên Cloudinary
+        String imageUrl = fileUploadService.uploadFile(file);
+
+        // 2. Tìm user
+        User user = findByUsername(email); // Dùng lại phương thức của bạn
+
+        // 3. Cập nhật URL ảnh mới
+        user.setProfileImageUrl(imageUrl);
+
+        // 4. Lưu lại vào database
+        userRepository.save(user);
+
+        // 5. Trả về DTO với thông tin mới
+        return UserDetailResponse.builder()
+                .id(user.getUserId().longValue())
+                .fullname(user.getFullName())
+                .email(user.getEmail())
+                .phone(user.getPhoneNumber())
+                .profileUrl(user.getProfileImageUrl()) // Đây là URL mới
+                .dateOfBirth(user.getDateOfBirth())
+                .build();
     }
 }

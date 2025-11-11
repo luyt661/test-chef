@@ -15,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 
 
 @RestController
@@ -83,6 +86,32 @@ public class UserController {
         } catch (RuntimeException e) {
             // Nên có một GlobalExceptionHandler để xử lý
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/profile/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseData<UserDetailResponse> updateProfileImage(
+            @RequestParam("file") MultipartFile file,
+            Authentication authentication) { // Dùng Authentication để lấy user
+
+        if (file.isEmpty()) {
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), "File không được để trống", null);
+        }
+
+        try {
+            // Lấy email từ user đã được xác thực (an toàn hơn)
+            String email = authentication.getName();
+
+            UserDetailResponse updatedDto = userService.updateProfileImage(email, file);
+
+            return new ResponseData<>(HttpStatus.OK.value(), "Cập nhật ảnh đại diện thành công", updatedDto);
+
+        } catch (IOException e) {
+            // Lỗi từ Cloudinary
+            return new ResponseData<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Lỗi khi tải ảnh lên: " + e.getMessage(), null);
+        } catch (Exception e) {
+            // Lỗi chung
+            return new ResponseData<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Lỗi hệ thống: " + e.getMessage(), null);
         }
     }
 
